@@ -1,0 +1,35 @@
+name: Deploy Site
+
+#Vamos executar esse workflow sempre que um commit for feitop (o push)
+#Mas apenas no branch main (maaster), então precisamos acrescentar regras.
+#ao inves de on, vamos usar uma estrutuaa do YAML com a propriedade push
+#dentro dela vamos especificar a lista de branches que devem disparar essa ação
+
+on:
+    push:
+        branches:
+            - master
+
+#vamso escrver o nosso job que tera como nome update-s3
+#precisamos acessar o conteúdo do repositório entoa por isso a primeira step será a action "checkout"
+
+jobs:
+    update-s3:
+      runs-on: ubuntu-22.04
+      steps:
+          - name: Checkout code
+            uses: actions/checkout@v4
+#agora vamos jogar isso para dentro do bucket.
+#Vamos usar a action pública s3-sync-action do Jakejarvis - Essa action consegue sincronizar os arquivos do nosso bucket com o conteúdo doi repositório
+#Ele faz o upload desse nosso repositório para dentro do bucket
+
+#nessa action o aoutor optou por usar variáveis de ambiemte então por isso vamos env ao inves with para a passagem de parametros.
+          - name: Upload passage
+            uses: jakejarvis/s3-sync-action@master
+            env:
+              AWS_S3_BUCKET: ci-cd-laboratory-fiap
+#Para que o nosso GitHub action se conecte com a AWS precisamos ccriar uma key para o nosso usuáriio
+            #Aqui vamos preprar o repositorio do github para receber as informações seinsiveis - secrets
+              AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+              AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACESS_KEY }}
+              

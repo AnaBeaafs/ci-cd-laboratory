@@ -10,5 +10,17 @@ jobs: #jobs sap tarefas particulartes que queremos executar dentro do workflow (
 #github action executa as atrefas que definimos dentro do container do docker peermitindo isolar o ambiente de execução
   #depois de delcarar a existência do job é necessario configurar algumas infromações para que ele execute.
     steps: #É como uma lista onde podemos definir quais sao os passos necessarios para completar o job.
-    - runs: echo "Rodando o wokflow de testes!"
+        name: Checkout
+        uses: actions/checkout@v5.0.0
 #podemos rodar comando aqui como se estivessemos no shell
+#agora que ja temos o codigo é necessário baixar e configurar o Python dentro do container com uma action ja existente, a actions/setup-python
+        name: Set up Python
+        uses: actions/setup-python@v5
+        #usando parametros (dessa para versão)
+        with:
+          python-version: "3.13"
+
+          #Agora vamos escrever a execusão dos testes:
+
+          name: Run tests
+          run: python -m unittest
