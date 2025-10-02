@@ -19,3 +19,8 @@ jobs: #jobs sap tarefas particulartes que queremos executar dentro do workflow (
         #usando parametros (dessa para versão)
         with:
           python-version: "3.13"
+
+          #Agora vamos escrever a execusão dos testes:
+
+          name: Run tests
+          run: python -m unittest
